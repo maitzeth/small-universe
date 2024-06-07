@@ -1,0 +1,14 @@
+.main {
+  /* height: 100vh; */
+  position: relative;
+  z-index: 4;
+}
+
+.cursor {
+  top: 0;
+  left: 0;
+  position: fixed;
+  border-radius: 100%;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
