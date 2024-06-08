@@ -31,6 +31,7 @@ export const Intro = () => {
     gsap.to('.word', {
       clipPath: 'inset(0 0 0%)',
       stagger: 0.25,
+      delay: 2
     });
   });
   

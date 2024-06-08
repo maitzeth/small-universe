@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAspect, useTexture } from '@react-three/drei';
+import { Loader, useAspect, useTexture } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { animate, useMotionValue, useTransform } from 'framer-motion';
 import { motion } from 'framer-motion-3d';
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useWindowSize } from 'react-use';
-import { fragment, linearAnimation, vertex } from '../../utils';
 import { useMouse } from '../../hooks/useMouse';
+import { fragment, linearAnimation, vertex } from '../../utils';
 import styles from './style.module.css';
 
 type ActiveProjectProps = {
@@ -103,8 +103,14 @@ export const Scene = ({ activeProject }: ActiveProjectProps) => {
   return (
     <div className={styles.canvas}>
       <Canvas>
-        <Model activeProject={activeProject} />
+        <Suspense fallback={null}>
+          <Model activeProject={activeProject} />
+        </Suspense>
       </Canvas>
+      <Loader
+        dataInterpolation={(p) => `Loading ${p.toFixed(2)}%`}
+        initialState={() => true}
+      />
     </div>
   );
 }

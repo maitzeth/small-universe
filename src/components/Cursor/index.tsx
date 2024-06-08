@@ -2,37 +2,38 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import styles from './style.module.css';
 import { useCursorStore } from "../../hooks/useCursorStore";
-import { motion } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 import { linearAnimation } from '../../utils';
 
 export function Cursor() {
   const { isActive } = useCursorStore();
-  const mouse = useRef({ x: 0, y: 0 });
-  const delayedMouse = useRef({ x: 0, y: 0 });
+
   const rafId = useRef<number | null>(null);
   const circle = useRef(null);
   const size = 200;
 
+  const mouse = {
+    x: useMotionValue(0),
+    y: useMotionValue(0)
+  };
+
+  const delayedMouse = {
+    x: useMotionValue(0),
+    y: useMotionValue(0)
+  }
+
   const manageMouseMove = (e: MouseEvent) => {
     const { clientX, clientY } = e;
     
-    // REFACTOR A FRAMER_MOTION
-    // TODO
-    mouse.current = {
-      x: clientX,
-      y: clientY
-    };
+    mouse.x.set(clientX);
+    mouse.y.set(clientY);
   }
 
   const animate = () => {
-    const { x, y } = delayedMouse.current;
+    delayedMouse.x.set(linearAnimation(delayedMouse.x.get(), mouse.x.get(), 0.075));
+    delayedMouse.y.set(linearAnimation(delayedMouse.y.get(), mouse.y.get(), 0.075));
 
-    delayedMouse.current = {
-      x: linearAnimation(x, mouse.current.x, 0.075),
-      y: linearAnimation(y, mouse.current.y, 0.075)
-    }
-
-    moveCircle(delayedMouse.current.x, delayedMouse.current.y);
+    moveCircle(delayedMouse.x.get(), delayedMouse.y.get());
     
     rafId.current = window.requestAnimationFrame(animate);
   }
