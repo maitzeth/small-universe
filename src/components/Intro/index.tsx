@@ -4,10 +4,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './style.module.css';
 import { useCursorStore } from '../../hooks/useCursorStore';
+import SplitType from 'split-type'
 
 gsap.registerPlugin(ScrollTrigger);
-
-const letters = 'UNIVERSE'.split('');
 
 const MOUSE_SENSITIVITY = 25;
 
@@ -15,6 +14,8 @@ export const Intro = () => {
   const { setActive } = useCursorStore();
 
   useGSAP(() => {
+    const text = new SplitType('#title', { types: 'chars' });
+
     gsap.fromTo('#title', {
       fontSize: '10vw',
     }, {
@@ -28,10 +29,14 @@ export const Intro = () => {
       fontSize: '0vw',
     });
 
-    gsap.to('.word', {
+    gsap.fromTo(text.chars, {
+      clipPath: 'inset(0 0 100%)',
+      y: 100,
+    }, {
       clipPath: 'inset(0 0 0%)',
+      y: 0,
       stagger: 0.25,
-      delay: 2
+      delay: 1.5
     });
   });
   
@@ -75,16 +80,7 @@ export const Intro = () => {
           data-scroll-speed="-0.7"
           id="title"
         >
-          {letters.map((word, index) => {
-            return (
-              <span
-                className="word"
-                key={`word-${index}`}
-              >
-                {word}
-              </span>
-            );
-          })}
+          UNIVERSE
         </p>
       </motion.div>
     </section>
